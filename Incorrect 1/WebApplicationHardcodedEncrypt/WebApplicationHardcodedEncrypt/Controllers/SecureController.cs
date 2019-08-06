@@ -58,11 +58,7 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         /// <returns></returns>
         private SymmetricAlgorithm GetSymmetricAlgorithm(string encryptionKey)
         {
-            SymmetricAlgorithm algorithm = SymmetricAlgorithm.Create("AES");
-
-            byte[] keyBytes = Encoding.ASCII.GetBytes(encryptionKey);
-
-            algorithm.Key = keyBytes;
+            AesCng algorithm = new AesCng(encryptionKey);
 
             return algorithm;
         }
@@ -99,17 +95,19 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         /// <returns></returns>
         private string DecrypteText(SymmetricAlgorithm aesAlgorithm, byte[] shifr)
         {
-            byte[] bytesIv = new byte[16];
+            int arrayIvSize = 16;
 
-            for (int i = shifr.Length - 16, j = 0; i < shifr.Length; i++, j++)
+            byte[] bytesIv = new byte[arrayIvSize];
+
+            for (int i = shifr.Length - arrayIvSize, j = 0; i < shifr.Length; i++, j++)
             {
                 bytesIv[j] = shifr[i];
             }
             aesAlgorithm.IV = bytesIv;
 
-            byte[] mess = new byte[shifr.Length - 16];
+            byte[] mess = new byte[shifr.Length - arrayIvSize];
 
-            for (int i = 0; i < shifr.Length - 16; i++)
+            for (int i = 0; i < shifr.Length - arrayIvSize; i++)
             {
                 mess[i] = shifr[i];
             }
