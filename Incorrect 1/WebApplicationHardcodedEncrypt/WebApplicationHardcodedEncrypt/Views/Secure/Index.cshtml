@@ -1,0 +1,37 @@
+﻿@model List<string>
+
+@{
+    /**/
+
+    ViewBag.Title = "Your data";
+}
+
+<h2>Your data</h2>
+
+<div class="data-style-add" id="main-data">
+    <div class="data-style-add-header row">
+        Enter key:
+    </div>
+    <div class="data-style-add-text row">
+        @* since, as a test example, we will leave a password for input here - lakdsljkalkjlksdfkdfsdfsddrwerwr*@
+        <input id="TextKey" type="password">
+    </div>
+    <div class="data-style-add-submit row">
+        <input type="button" id="enterKey" value="Enter" />
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#enterKey').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Data", "Secure")',
+                data: { 'Key': $('#TextKey').val() },
+                success: function (result) {
+                    $('#main-data').html(result);
+                }
+            });
+        })
+    })
+</script>

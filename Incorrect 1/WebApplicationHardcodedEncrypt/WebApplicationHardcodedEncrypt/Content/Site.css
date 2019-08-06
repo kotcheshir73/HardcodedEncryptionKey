@@ -1,0 +1,57 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.data-style-add {
+    padding: 10px;
+}
+
+.data-style-add-header {
+    margin: 10px;
+    font-size: 16px;
+}
+
+.data-style-add-text {
+    width: 100%;
+    padding: 10px;
+}
+
+    .data-style-add-text input {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+.data-style-add-submit {
+    padding: 10px;
+}
+
+    .data-style-add-submit input {
+        border-radius: 5px;
+        float: right;
+    }
+
+.data-style {
+    margin: 10px;
+}
+
+.data-element-style {
+    padding: 0px 0px 5px 10px;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+}

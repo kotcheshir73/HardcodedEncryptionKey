@@ -1,0 +1,32 @@
+﻿@model List<string>
+
+@if (User.Identity.IsAuthenticated)
+{
+    using (Html.BeginForm("Create", "Secure", FormMethod.Post))
+    {
+        @Html.Hidden("Key", (object)ViewBag.Key)
+        <div class="data-style-add">
+            <div class="data-style-add-header row">
+                Enter text:
+            </div>
+            <div class="data-style-add-text row">
+                @Html.TextBox("Text")
+            </div>
+            <div class="data-style-add-submit row">
+                <input type="submit" value="Save" />
+            </div>
+        </div>
+    }
+}
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="data-style row">
+        @foreach (var elem in Model)
+        {
+            <div class="data-element-style row">
+                @elem
+            </div>
+        }
+    </div>
+}
