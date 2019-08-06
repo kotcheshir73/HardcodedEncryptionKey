@@ -1,0 +1,5 @@
+The key is encrypted in code. When receiving or saving user data from the database, the key is decrypted.
+
+SecureController: 13, 60.
+
+Disadvantage: Vulnerability remains. Using keys encoded as Base64 strings would only provide the illusion of security. An attacker can pick up a key on an encrypted string with key.

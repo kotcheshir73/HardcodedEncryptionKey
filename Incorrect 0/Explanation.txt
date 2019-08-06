@@ -1,0 +1,6 @@
+Encryption key moved to Web.config file.
+Web.config: 22.
+SecureController: 12.
+
+Advantage: code reassembly is not required to change the key.
+Disadvantage: the key is available to developers.

@@ -1,0 +1,4 @@
+The key is stored in the database. You can restrict access to the database and hide the key from the developers. The key can be easily changed with access to the database.
+
+SettingsModel - Database table for storing parameters. One of the options will be the encryption key.
+SecureController: 12, 58.

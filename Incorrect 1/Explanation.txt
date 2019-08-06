@@ -1,0 +1,6 @@
+We remove the key from the code. We ask users to enter the key from the form.
+
+SecureController: 12-33.
+
+Advantages: developers do not know the key.
+Disadvantages: the key is known to all users. Solution: for each user its own key. Each user is forced to remember his key.

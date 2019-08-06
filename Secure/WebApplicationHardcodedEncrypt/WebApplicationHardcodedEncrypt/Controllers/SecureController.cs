@@ -26,6 +26,7 @@ namespace WebApplicationHardcodedEncrypt.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult Create(string text)
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
@@ -46,6 +47,10 @@ namespace WebApplicationHardcodedEncrypt.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Getting an object of a cryptographic class
+        /// </summary>
+        /// <returns></returns>
         private SymmetricAlgorithm GetSymmetricAlgorithm(ApplicationDbContext context)
         {
             SymmetricAlgorithm algorithm = SymmetricAlgorithm.Create("AES");
@@ -57,6 +62,12 @@ namespace WebApplicationHardcodedEncrypt.Controllers
             return algorithm;
         }
 
+        /// <summary>
+        /// Text encryption
+        /// </summary>
+        /// <param name="aesAlgorithm">cryptographic class</param>
+        /// <param name="text">text</param>
+        /// <returns></returns>
         private byte[] EncryptText(SymmetricAlgorithm aesAlgorithm, string text)
         {
             ICryptoTransform crypt = aesAlgorithm.CreateEncryptor(aesAlgorithm.Key, aesAlgorithm.IV);
@@ -75,6 +86,12 @@ namespace WebApplicationHardcodedEncrypt.Controllers
             }
         }
 
+        /// <summary>
+        /// Text decryption
+        /// </summary>
+        /// <param name="aesAlgorithm">cryptographic class</param>
+        /// <param name="text">text</param>
+        /// <returns></returns>
         private string DecrypteText(SymmetricAlgorithm aesAlgorithm, byte[] shifr)
         {
             byte[] bytesIv = new byte[16];

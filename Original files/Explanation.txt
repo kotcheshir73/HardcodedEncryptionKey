@@ -1,0 +1,9 @@
+Vulnerability: Hardcoded Encryption Key.
+Hardcoded encryption keys can compromise security in a way that cannot be easily remedied. It is never a good idea to hardcode an encryption key because it allows all of the project's developers to view the encryption key, and makes fixing the problem extremely difficult. After the code is in production, a software patch is required to change the encryption key. If the account that is protected by the encryption key is compromised, the owners of the system must choose between security and availability.
+
+Example. 
+The application is designed to store important user data. The user can enter text data on the Secure page and save them in the database. Data is stored in encrypted form. AES encryption algorithm is used.
+DataModel: user data storage table.
+SecureController: controller for displaying and adding user data. The controller stores the encryption key (Vulnerability). The controller has encryption and decryption algorithms for the text.
+
+Open the application in the Visual Studio (version 2017 or higher). Run it. In the menu, select "Secure". 
