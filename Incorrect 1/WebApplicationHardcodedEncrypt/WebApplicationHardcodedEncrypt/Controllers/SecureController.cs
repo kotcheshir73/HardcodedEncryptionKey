@@ -17,14 +17,20 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         [HttpPost]
         public ActionResult Data(string key)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
-            using (SymmetricAlgorithm algorithm = GetSymmetricAlgorithm(key))
+            using (var context = new ApplicationDbContext())
             {
-                if (User.Identity.IsAuthenticated)
+                using (var algorithm = GetSymmetricAlgorithm(key))
                 {
-                    var datas = context.Datas.Where(x => x.UserId == User.Identity.Name).ToList().Select(x => DecrypteText(algorithm, x.EncodingText));
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var datas = context.Datas
+                            .Where(x => x.UserId == User.Identity.Name)
+                            .ToList()
+                            .Select(x => DecrypteText(algorithm, x.EncodingText))
+                            .ToList();
 
-                    return PartialView(datas.ToList());
+                        return PartialView(datas);
+                    }
                 }
             }
 
@@ -34,18 +40,19 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         [HttpPost]
         public ActionResult Create(string text, string key)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
-            using (SymmetricAlgorithm algorithm = GetSymmetricAlgorithm(key))
-            {
-                if (User.Identity.IsAuthenticated)
+            using (var context = new ApplicationDbContext())
+            {   using (var algorithm = GetSymmetricAlgorithm(key))
                 {
-                    context.Datas.Add(new DataModel
+                    if (User.Identity.IsAuthenticated)
                     {
-                        UserId = User.Identity.Name,
-                        EncodingText = EncryptText(algorithm, text)
-                    });
+                        context.Datas.Add(new DataModel
+                        {
+                            UserId = User.Identity.Name,
+                            EncodingText = EncryptText(algorithm, text)
+                        });
 
-                    context.SaveChanges();
+                        context.SaveChanges();
+                    }
                 }
             }
 
@@ -58,7 +65,11 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         /// <returns></returns>
         private SymmetricAlgorithm GetSymmetricAlgorithm(string encryptionKey)
         {
-            AesCng algorithm = new AesCng(encryptionKey);
+            var algorithm = new AesCng();
+
+            var keyBytes = Encoding.ASCII.GetBytes(encryptionKey);
+
+            algorithm.Key = keyBytes;
 
             return algorithm;
         }
@@ -71,17 +82,19 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         /// <returns></returns>
         private byte[] EncryptText(SymmetricAlgorithm aesAlgorithm, string text)
         {
-            ICryptoTransform crypt = aesAlgorithm.CreateEncryptor(aesAlgorithm.Key, aesAlgorithm.IV);
-            using (MemoryStream ms = new MemoryStream())
+            var crypt = aesAlgorithm.CreateEncryptor(aesAlgorithm.Key, aesAlgorithm.IV);
+
+            using (var ms = new MemoryStream())
             {
-                using (CryptoStream cs = new CryptoStream(ms, crypt, CryptoStreamMode.Write))
+                using (var cs = new CryptoStream(ms, crypt, CryptoStreamMode.Write))
                 {
-                    using (StreamWriter sw = new StreamWriter(cs))
+                    using (var sw = new StreamWriter(cs))
                     {
                         sw.Write(text);
                     }
                 }
-                byte[] encrypted = ms.ToArray();
+
+                var encrypted = ms.ToArray();
 
                 return encrypted.Concat(aesAlgorithm.IV).ToArray();
             }
@@ -97,7 +110,7 @@ namespace WebApplicationHardcodedEncrypt.Controllers
         {
             int arrayIvSize = 16;
 
-            byte[] bytesIv = new byte[arrayIvSize];
+            var bytesIv = new byte[arrayIvSize];
 
             for (int i = shifr.Length - arrayIvSize, j = 0; i < shifr.Length; i++, j++)
             {
@@ -105,21 +118,22 @@ namespace WebApplicationHardcodedEncrypt.Controllers
             }
             aesAlgorithm.IV = bytesIv;
 
-            byte[] mess = new byte[shifr.Length - arrayIvSize];
+            var mess = new byte[shifr.Length - arrayIvSize];
 
             for (int i = 0; i < shifr.Length - arrayIvSize; i++)
             {
                 mess[i] = shifr[i];
             }
 
-            byte[] data = mess;
+            var data = mess;
 
-            ICryptoTransform crypt = aesAlgorithm.CreateDecryptor(aesAlgorithm.Key, aesAlgorithm.IV);
-            using (MemoryStream ms = new MemoryStream(data))
+            var crypt = aesAlgorithm.CreateDecryptor(aesAlgorithm.Key, aesAlgorithm.IV);
+
+            using (var ms = new MemoryStream(data))
             {
-                using (CryptoStream cs = new CryptoStream(ms, crypt, CryptoStreamMode.Read))
+                using (var cs = new CryptoStream(ms, crypt, CryptoStreamMode.Read))
                 {
-                    using (StreamReader sr = new StreamReader(cs))
+                    using (var sr = new StreamReader(cs))
                     {
                         return sr.ReadToEnd();
                     }
